@@ -1,18 +1,12 @@
-Hello, My Friends  
-Thank you for having interest in this repository ! 
+# YouTube Clone Coding
 
-To use this application, 
+##  **MongoDB**를 활용한 YouTube clone 사이트 만들기
 
-1. make dev.js file inside config folder 
-2. put mongoDB info into dev.js file 
-3. Type  " npm install " inside the root directory  ( Download Server Dependencies ) 
-4. Type " npm install " inside the client directory ( Download Front-end Dependencies )
+> #### ***MongoDB***와 ***React***, ***Node*** 등을 이용하여 YouTube 같은 비디오 업로드 사이트를 만들 수 있다.   
 
+---
 
-If you have problem, feel free to ask me ^^ 
-
-You can watch the tutorial for this app.
-
-https://www.youtube.com/channel/UCFyXA9x8lpL3EYWeYhj4C4Q?view_as=subscriber
-
-
+## **기한**
+>#### 이 과정은 **5월 30일** 이내에 마칠 수 있다.
+* 05.14 : Project 시작 및 비디오 업로드 페이지를 생성하였다.
+* 05.18 : 비디오 업로드 시 썸네일이 화면에 출력되도록 하였다.
