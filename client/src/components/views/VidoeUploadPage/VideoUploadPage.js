@@ -24,6 +24,9 @@ function VideoUploadPage() {
     const [Description, setDescriptions] = useState("");
     const [Private, setPrivate] = useState("");
     const [Category, setCategory] = useState("Film & Animation");
+    const [FilePath, setFilePath] = useState("");
+    const [Duration, setDuration] = useState("");
+    const [ThumbnailPath, setThumbnailPath] = useState("");
 
     const onTitleChange = (e) => {
         setVideoTitle(e.currentTarget.value);
@@ -50,13 +53,32 @@ function VideoUploadPage() {
 
         console.log(file)
 
-        Axios.post('/api/video/uploadfiles', formData, config).then(response => {
-            if (response.data.success) { // upload success
-                console.log(response)
-            } else { // upload fail
-                alert("video upload fail");
-            }
-        })
+        Axios.post('/api/video/uploadfiles', formData, config)
+            .then(response => {
+                if (response.data.success) { // upload success
+                    console.log(response.data);
+
+                    let temp = {
+                        url: response.data.url,
+                        fileName: response.data.fileName
+                    };
+
+                    setFilePath(response.data.url);
+
+                    Axios.post('/api/video/thumbnail', temp)
+                    .then(response => {
+                        if(response.data.success) {
+                            setDuration(response.data.fileDuration);
+                            setThumbnailPath(response.data.url);
+                            console.log(response.data)
+                        } else {
+                            alert('썸네일 생성 실패')
+                        }
+                    });
+                } else { // upload fail
+                    alert("video upload fail");
+                }
+            })
     };
 
     return (
@@ -85,9 +107,11 @@ function VideoUploadPage() {
 
                     </DropZone>
                     {/* thumbnail */}
-                    <div>
-                        <img src alt />
-                    </div>
+                    {ThumbnailPath && 
+                        <div>
+                            <img src={`http://localhost:5000/${ThumbnailPath}`} alt="thumbnail" />
+                        </div>
+                    }
                 </div>
 
                 <br />
