@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-// const { Video } = require("../models/Video");
 const multer = require("multer");
 let ffmpeg = require("fluent-ffmpeg");
+const { Video } = require('../models/Video');
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => { // 파일 저장 위치 지정
@@ -34,6 +34,18 @@ router.post('/uploadfiles', (req, res) => {
         }
         return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
     });
+});
+
+router.post('/uploadVideo', (req, res) => {
+    // Video save on server
+    const video = new Video(req.body)
+    video.save((err, doc) => { // mongoDB method (mongoDB에 저장)
+        if(err) {
+            return res.json({success: false, err})
+        }
+        res.status(200).json({success: true})
+    })
+
 });
 
 router.post('/thumbnail', (req, res) => {
