@@ -40,12 +40,24 @@ router.post('/uploadVideo', (req, res) => {
     // Video save on server
     const video = new Video(req.body)
     video.save((err, doc) => { // mongoDB method (mongoDB에 저장)
-        if(err) {
-            return res.json({success: false, err})
+        if (err) {
+            return res.json({ success: false, err })
         }
-        res.status(200).json({success: true})
+        res.status(200).json({ success: true })
     })
 
+});
+
+router.post('/getVideos', (req, res) => {
+    // 비디오를 DB에서 가져와 클라이언트에 보낸다.
+    Video.find() // video collection에 있는 모든 video를 가져옴
+        .populate('writer')
+        .exec((err, videos) => {
+            if (err) {
+                return res.status(400).send(err);
+            }
+            res.status(200).json({ success: true, videos })
+        })
 });
 
 router.post('/thumbnail', (req, res) => {
@@ -55,7 +67,7 @@ router.post('/thumbnail', (req, res) => {
     let fileDuration = "";
 
     // 비디오 정보 가져오기
-    ffmpeg.ffprobe(req.body.url, function(err, metadata) {
+    ffmpeg.ffprobe(req.body.url, function (err, metadata) {
         console.log(metadata);
         console.log(metadata.format.duration);
         fileDuration = metadata.format.duration;
@@ -63,13 +75,13 @@ router.post('/thumbnail', (req, res) => {
     ffmpeg.setFfmpegPath("C:\\Users\\82103\\ffmpeg-5.0.1-full_build\\bin\\ffmpeg.exe");
 
     ffmpeg(req.body.url)
-        .on('filenames', function(filenames) {
+        .on('filenames', function (filenames) {
             console.log("Will genenrate " + filenames.join(', '));
             console.log(filenames);
 
             filePath = "uploads/thumbnails/" + filenames[0];
         })
-        .on('end', function() {
+        .on('end', function () {
             console.log("Screenshots taken");
             return res.json({
                 success: true,
@@ -77,7 +89,7 @@ router.post('/thumbnail', (req, res) => {
                 fileDuration: fileDuration
             });
         })
-        .on('error', function(err) {
+        .on('error', function (err) {
             console.log(err);
             return res.json({
                 success: false, err
