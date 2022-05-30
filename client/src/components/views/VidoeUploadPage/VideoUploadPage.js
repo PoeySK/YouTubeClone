@@ -67,15 +67,15 @@ function VideoUploadPage(props) {
                     setFilePath(response.data.url);
 
                     Axios.post('/api/video/thumbnail', temp)
-                    .then(response => {
-                        if(response.data.success) {
-                            setDuration(response.data.fileDuration);
-                            setThumbnailPath(response.data.url);
-                            console.log(response.data)
-                        } else {
-                            alert('썸네일 생성 실패')
-                        }
-                    });
+                        .then(response => {
+                            if (response.data.success) {
+                                setDuration(response.data.fileDuration);
+                                setThumbnailPath(response.data.url);
+                                console.log(response.data)
+                            } else {
+                                alert('썸네일 생성 실패')
+                            }
+                        });
                 } else { // upload fail
                     alert("Video Upload Fail");
                 }
@@ -98,9 +98,9 @@ function VideoUploadPage(props) {
 
         Axios.post('/api/video/uploadVideo', variables)
             .then(response => {
-                if(response.data.success) {
+                if (response.data.success) {
                     console.log(response.data);
-                    
+
                     message.success('성공적으로 업로드를 했습니다.')
 
                     setTimeout(() => {
@@ -138,7 +138,7 @@ function VideoUploadPage(props) {
 
                     </DropZone>
                     {/* thumbnail */}
-                    {ThumbnailPath && 
+                    {ThumbnailPath &&
                         <div>
                             <img src={`http://localhost:5000/${ThumbnailPath}`} alt="thumbnail" />
                         </div>

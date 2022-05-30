@@ -41,17 +41,17 @@ router.post('/uploadVideo', (req, res) => {
     const video = new Video(req.body)
     video.save((err, doc) => { // mongoDB method (mongoDB에 저장)
         if (err) {
-            return res.json({ success: false, err })
+            return res.state(400).json({ success: false, err })
         }
         res.status(200).json({ success: true })
     })
 
 });
 
-router.post('/getVideos', (req, res) => {
+router.get('/getVideos', (req, res) => {
     // 비디오를 DB에서 가져와 클라이언트에 보낸다.
     Video.find() // video collection에 있는 모든 video를 가져옴
-        .populate('writer')
+        .populate('writer') // writer의 id를 기준한 해당 데이터의 모든 정보를 가져와줌.
         .exec((err, videos) => {
             if (err) {
                 return res.status(400).send(err);
