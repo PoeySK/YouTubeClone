@@ -48,6 +48,19 @@ router.post('/uploadVideo', (req, res) => {
 
 });
 
+router.post('/getVideoDetail', (req, res) => {
+    // Id에 맞는 video정보를 가져온다.
+    Video.findOne({ "_id": req.body.videoId }) // client에서 보낸 id를 이용하여 video를 찾음.
+        .populate('writer')
+        .exec((err, videoDetail) => {
+            if (err) {
+                return res.status(400).send(err)
+            }
+            return res.status(200).json({ success: true, videoDetail })
+        })
+
+});
+
 router.get('/getVideos', (req, res) => {
     // 비디오를 DB에서 가져와 클라이언트에 보낸다.
     Video.find() // video collection에 있는 모든 video를 가져옴
