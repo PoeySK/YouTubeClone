@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 let ffmpeg = require("fluent-ffmpeg");
 const { Video } = require('../models/Video');
+const { Subscriber } = require('../models/Subscriber');
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => { // 파일 저장 위치 지정
@@ -46,6 +47,30 @@ router.post('/uploadVideo', (req, res) => {
         res.status(200).json({ success: true })
     })
 
+});
+
+router.post('/getSubscriptionVideos', (req, res) => {
+    // 현재 Id를 기준으로 구독한 Id를 찾기
+    Subscriber.find({ userFrom: req.body.userFrom })
+        .exec((err, subscriberInfo) => {
+            if (err) {
+                return res.status(400).send(err);
+            }
+            let subscribedUser = [];
+            subscriberInfo.map((Subscriber, i) => {
+                subscribedUser.push(Subscriber.userTo);
+            })
+
+            // 찾은 Id의 Video 가져오기
+            Video.find({ writer: { $in: subscribedUser } }) // req.body.id -> user의 인원수가 얼마나 있는지 모름(2명 이상은 불가능한 방법)
+                .populate('writer')
+                .exec((err, videos) => {
+                    if (err) {
+                        return res.status(400).send(err);
+                    }
+                    res.status(200).json({ success: true, videos })
+                })
+        })
 });
 
 router.post('/getVideoDetail', (req, res) => {
