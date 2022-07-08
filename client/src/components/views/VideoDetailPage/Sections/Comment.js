@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import SingleComment from './SingleComment';
 
 function Comment(props) {
     const videoId = props.postId
@@ -20,12 +21,12 @@ function Comment(props) {
             writer: user.userData._id,
             postId: videoId
         }
-        console.log(variables)
+        
         Axios.post('/api/comment/saveComment', variables)
             .then(response => {
                 if (response.data.success) {
                     setCommentValue("")
-                    console.log(response.data.result)
+                    props.refreshFunction(response.data.result)
                 } else {
                     alert('커멘트를 저장하지 못했습니다.')
                 }
@@ -38,10 +39,7 @@ function Comment(props) {
             <p>REPLIES</p>
             <hr />
 
-            {/* Comment Lists */}
-
             {/* Root COmment Form */}
-
             <form style={{ display: 'flex' }} onSubmit={onSubmit}>
                 <textarea
                     style={{ width: '100%', borderRadius: '5px' }}
@@ -52,6 +50,13 @@ function Comment(props) {
                 <br />
                 <button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>Sumbit</button>
             </form>
+
+            {/* Comment Lists */}
+            {props.commentLists && props.commentLists.map((comment, index)=>(
+                (!comment.responseTo && 
+                    <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />
+                )
+            ))}
         </div>
     )
 }
