@@ -9,14 +9,14 @@ function SingleComment(props) {
     const user = useSelector(state => state.user)
 
     const [OpenReply, setOpenReply] = useState(false);
-    const [CommentValue, setCommentValue] = useState();
+    const [CommentValue, setCommentValue] = useState("");
 
     const onClickReplyOpen = () => {
         setOpenReply(!OpenReply);
     }
 
     const onHandleChange = (event) => {
-        setCommentValue(event.currentTarget.CommentValue)
+        setCommentValue(event.currentTarget.value)
     }
 
     const onSubmit = (event) => {
@@ -33,6 +33,7 @@ function SingleComment(props) {
             .then(response => {
                 if (response.data.success) {
                     setCommentValue("")
+                    setOpenReply(!OpenReply)
                     props.refreshFunction(response.data.result)
                 } else {
                     alert('커멘트를 저장하지 못했습니다.')
@@ -49,7 +50,7 @@ function SingleComment(props) {
             <Comment
                 actions={actions}
                 author={props.comment.writer.name}
-                avatar={<Avatar src={props.comment.writer.image} alt />}
+                avatar={<Avatar src={props.comment.writer.image} alt="image" />}
                 content={<p>{props.comment.content}</p>}
             />
 
